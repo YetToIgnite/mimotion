@@ -36,7 +36,13 @@ def get_min_max_by_time(hour=None, minute=None):
     time_rate = min((hour * 60 + minute) / (22 * 60), 1)
     min_step = get_int_value_default(config, 'MIN_STEP', 18000)
     max_step = get_int_value_default(config, 'MAX_STEP', 25000)
-    return int(time_rate * min_step), int(time_rate * max_step)
+    min_floor = get_int_value_default(config, 'MIN_STEP_FLOOR', 10000)
+    max_floor = get_int_value_default(config, 'MAX_STEP_FLOOR', 12000)
+    calc_min = max(int(time_rate * min_step), min_floor)
+    calc_max = max(int(time_rate * max_step), max_floor)
+    if calc_max < calc_min:
+        calc_max = calc_min
+    return calc_min, calc_max
 
 
 # 虚拟ip地址
